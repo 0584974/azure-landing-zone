@@ -1,0 +1,47 @@
+name: Import Sprint 2
+
+on:
+  push:
+    branches:
+      - import-sprint2
+    paths:
+      - '.github/workflows/import-sprint2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout import payload
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and publish Sprint 2 snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "0584974"
+          git config user.email "43546487+0584974@users.noreply.github.com"
+
+          base64 -d .import/sprint2-delta.b64 > /tmp/sprint2-delta.tar.gz
+          gzip -t /tmp/sprint2-delta.tar.gz
+
+          git fetch origin main
+          git checkout -B sprint2-build origin/main
+          tar xzf /tmp/sprint2-delta.tar.gz -C .
+
+          git add -A
+          count=$(git ls-files | wc -l | tr -d ' ')
+          tree=$(git write-tree)
+          echo "file_count=$count"
+          echo "tree=$tree"
+
+          test "$count" = "888"
+          test "$tree" = "40f70f41753a8d74ec29e53e42266609f901ea6f"
+
+          git commit -m "Sprint 2: pipeline and deployment orchestration"
+          git push origin HEAD:main
