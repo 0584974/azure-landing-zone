@@ -1,0 +1,43 @@
+name: Compare upstream snapshot
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone upstream ALZ-Bicep v0.22.5
+        run: git clone --depth 1 --branch v0.22.5 https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
+      - name: Print canonical directory hashes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root = Path('/tmp/alz-upstream/infra-as-code/bicep')
+          def digest(path):
+              files = sorted(p for p in path.rglob('*') if p.is_file())
+              h = hashlib.sha256()
+              total = 0
+              for p in files:
+                  rel = p.relative_to(path).as_posix().encode()
+                  data = p.read_bytes()
+                  h.update(rel); h.update(b'\0'); h.update(data); h.update(b'\0')
+                  total += len(data)
+              return len(files), total, h.hexdigest()
+          print('OVERALL', *digest(root), sep='\t')
+          for top in ['CRML','modules','orchestration']:
+              p = root/top
+              print(top, *digest(p), sep='\t')
+              for d in sorted(x for x in p.iterdir() if x.is_dir()):
+                  print(f'{top}/{d.name}', *digest(d), sep='\t')
+          for p in sorted(x for x in root.iterdir() if x.is_file()):
+              data=p.read_bytes()
+              blob=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
+              print(f'FILE/{p.name}', len(data), blob, sep='\t')
+          PY
