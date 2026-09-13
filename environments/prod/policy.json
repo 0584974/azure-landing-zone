@@ -1,0 +1,9 @@
+{
+  "customPolicyAssignment": {
+    "name": "iso27000",
+    "displayName": "Assess ISO compliance",
+    "description": "Policy assignment to management group with Bicep",
+    "definitionId": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2",
+    "nonComplianceMessage": "Resources should be ISO compliant"
+  }
+}

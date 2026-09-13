@@ -1,0 +1,23 @@
+{
+  "resourceGroupNames": {
+    "logging": "rg-alz-logging-001",
+    "connectivity": "rg-alz-connectivity-001",
+    "identity": "rg-alz-identity-001",
+    "security": "rg-alz-security-001"
+  },
+  "resourceNames": {
+    "logAnalyticsWorkspace": "alz-log-analytics",
+    "automationAccount": "alz-automation-account",
+    "userAssignedIdentity": "alz-umi-identity",
+    "dataCollectionRules": {
+      "vmInsights": "alz-ama-vmi-dcr",
+      "changeTracking": "alz-ama-ct-dcr",
+      "mdfcSql": "alz-ama-mdfcsql-dcr"
+    }
+  },
+  "logAnalyticsConfiguration": {
+    "retentionInDays": "90",
+    "resourceCategory": "allLogs",
+    "skuName": "PerGB2018"
+  }
+}

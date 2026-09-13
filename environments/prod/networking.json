@@ -1,0 +1,5 @@
+{
+  "connectivityResourceGroupName": "rg-alz-connectivity-001",
+  "primaryLocation": "swedencentral",
+  "secondaryLocation": "germanywestcentral"
+}

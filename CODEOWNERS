@@ -1,0 +1,6 @@
+* @public-clouds
+/docs/ @public-clouds
+/environments/ @public-clouds
+/platforms/infra-as-code/bicep/modules/ @public-clouds
+/platforms/infra-as-code/bicep/orchestration/ @public-clouds
+/governance/ @public-clouds

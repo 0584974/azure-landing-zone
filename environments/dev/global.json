@@ -1,0 +1,10 @@
+{
+  "environment": "Dev",
+  "region": "SwedenCentral",
+  "primaryLocation": "swedencentral",
+  "secondaryLocation": "germanywestcentral",
+  "managementGroupId": "your-management-group-id",
+  "topLevelManagementGroupPrefix": "alz",
+  "topLevelManagementGroupSuffix": "",
+  "topLevelManagementGroupDisplayName": "Azure Landing Zones"
+}
