@@ -1,0 +1,53 @@
+name: Import Sprint 1
+
+on:
+  push:
+    branches:
+      - import-sprint1
+    paths:
+      - '.github/workflows/import-sprint1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout import payload
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and publish exact Sprint 1 snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "0584974"
+          git config user.email "43546487+0584974@users.noreply.github.com"
+
+          cat .import/reconstruct/sprint1/part00 .import/reconstruct/sprint1/part01 > /tmp/sprint1.b64
+          base64 -d /tmp/sprint1.b64 > /tmp/sprint1.tar.gz
+          gzip -t /tmp/sprint1.tar.gz
+
+          git fetch origin main
+          git checkout -B sprint1-build origin/main
+
+          mkdir -p platforms
+          mv infra-as-code platforms/infra-as-code
+          tar xzf /tmp/sprint1.tar.gz -C .
+          rm -rf infra-as-code
+          ln -s platforms/infra-as-code infra-as-code
+
+          git add -A
+          count=$(git ls-files | wc -l | tr -d ' ')
+          tree=$(git write-tree)
+          echo "file_count=$count"
+          echo "tree=$tree"
+
+          test "$count" = "869"
+          test "$tree" = "d129f9b96a9a125f6e0d449908084908eb848119"
+
+          git commit -m "Sprint 1: foundation and environment structure"
+          git push origin HEAD:main
