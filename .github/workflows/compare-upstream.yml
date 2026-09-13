@@ -1,66 +1,33 @@
-name: Compare upstream snapshot
-
+name: Compare full vendor snapshot
 on:
   push:
     branches: [main]
-
 permissions:
   contents: read
-
 jobs:
   compare:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Reassemble local manifest
+      - name: Compare all vendored ALZ-Bicep files
         shell: bash
         run: |
-          cat .import/manifest/part* | base64 -d | gzip -d > /tmp/local.tsv
-          wc -l /tmp/local.tsv
-      - name: Clone ALZ-Bicep v0.22.2
-        run: git clone -q --depth 1 --branch v0.22.2 https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
-      - name: Identify exact local overlay
-        shell: bash
-        run: |
+          base64 -d .import/full-vendor-manifest.b64 | gzip -d > /tmp/local.tsv
+          git clone -q --depth 1 --branch v0.22.2 https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
           python3 - <<'PY'
           from pathlib import Path
           import hashlib
-
-          root = Path('/tmp/alz-upstream/infra-as-code/bicep')
-          expected = {}
+          root=Path('/tmp/alz-upstream/infra-as-code/bicep')
+          expected={}
           for line in Path('/tmp/local.tsv').read_text().splitlines():
-              sha, path = line.split('\t', 1)
-              expected[path] = sha
-
-          def blob_sha(data):
-              return hashlib.sha1(f'blob {len(data)}\0'.encode() + data).hexdigest()
-
-          diffs=[]; local_only=[]; upstream_only=[]; matches=[]
-          for path, local_sha in sorted(expected.items()):
-              p = root / path
-              if not p.exists():
-                  local_only.append((path, local_sha))
-                  continue
-              upstream_sha = blob_sha(p.read_bytes())
-              if upstream_sha == local_sha:
-                  matches.append(path)
-              else:
-                  diffs.append((path, local_sha, upstream_sha))
-
-          prefixes = sorted(set(path.split('/',2)[0]+'/'+path.split('/',2)[1] for path in expected))
-          for prefix in prefixes:
-              p = root / prefix
-              if not p.exists(): continue
-              for f in sorted(x for x in p.rglob('*') if x.is_file()):
-                  rel = f.relative_to(root).as_posix()
-                  if rel not in expected:
-                      upstream_only.append((rel, blob_sha(f.read_bytes())))
-
-          print(f'MATCH={len(matches)} DIFF={len(diffs)} LOCAL_ONLY={len(local_only)} UPSTREAM_ONLY={len(upstream_only)}')
-          for path, local_sha, upstream_sha in diffs:
-              print('DIFF', local_sha, upstream_sha, path, sep='\t')
-          for path, local_sha in local_only:
-              print('LOCAL_ONLY', local_sha, path, sep='\t')
-          for path, upstream_sha in upstream_only:
-              print('UPSTREAM_ONLY', upstream_sha, path, sep='\t')
+              sha,path=line.split('\t',1); expected[path]=sha
+          def bsha(p):
+              d=p.read_bytes(); return hashlib.sha1(f'blob {len(d)}\0'.encode()+d).hexdigest()
+          upstream={p.relative_to(root).as_posix(): bsha(p) for p in root.rglob('*') if p.is_file()}
+          diffs=[]
+          for p in sorted(set(expected)|set(upstream)):
+              a=expected.get(p); b=upstream.get(p)
+              if a!=b: diffs.append((p,a,b))
+          print(f'LOCAL={len(expected)} UPSTREAM={len(upstream)} DIFF={len(diffs)}')
+          for p,a,b in diffs: print('DIFF',a or '-',b or '-',p,sep='\t')
           PY
