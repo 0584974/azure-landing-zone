@@ -1,39 +1,10 @@
 name: Compare full vendor snapshot
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
   compare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Compare all vendored ALZ-Bicep files
-        shell: bash
-        run: |
-          set -euo pipefail
-          base64 -d .import/full-manifest.b64 | gzip -d > /tmp/local-full.tsv
-          echo "FULL_MANIFEST_LINES=$(wc -l < /tmp/local-full.tsv)"
-          head -3 /tmp/local-full.tsv
-          git clone -q --depth 1 --branch v0.22.2 https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
-          python3 - <<'PY'
-          from pathlib import Path
-          import hashlib
-          root=Path('/tmp/alz-upstream/infra-as-code/bicep')
-          expected={}
-          marker='infra-as-code/bicep/'
-          for line in Path('/tmp/local-full.tsv').read_text().splitlines():
-              sha,path=line.split('\t',1)
-              if marker in path:
-                  expected[path.split(marker,1)[1]]=sha
-          def bsha(p):
-              d=p.read_bytes(); return hashlib.sha1(f'blob {len(d)}\0'.encode()+d).hexdigest()
-          upstream={p.relative_to(root).as_posix(): bsha(p) for p in root.rglob('*') if p.is_file()}
-          diffs=[]
-          for p in sorted(set(expected)|set(upstream)):
-              a=expected.get(p); b=upstream.get(p)
-              if a!=b: diffs.append((p,a,b))
-          print(f'LOCAL_VENDOR={len(expected)} UPSTREAM_VENDOR={len(upstream)} DIFF={len(diffs)}')
-          for p,a,b in diffs: print('DIFF',a or '-',b or '-',p,sep='\t')
-          PY
+      - run: echo "Historical comparison workflow disabled during reconstruction."
