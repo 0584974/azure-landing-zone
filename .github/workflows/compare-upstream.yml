@@ -21,11 +21,9 @@ jobs:
           import hashlib
           root=Path('/tmp/alz-upstream/infra-as-code/bicep')
           expected={}
-          marker='infra-as-code/bicep/'
           for line in Path('/tmp/local-full.tsv').read_text().splitlines():
               sha,path=line.split('\t',1)
-              if marker in path:
-                  expected[path.split(marker,1)[1]]=sha
+              expected[path]=sha
           def bsha(p):
               d=p.read_bytes(); return hashlib.sha1(f'blob {len(d)}\0'.encode()+d).hexdigest()
           upstream={p.relative_to(root).as_posix(): bsha(p) for p in root.rglob('*') if p.is_file()}
