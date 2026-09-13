@@ -1,0 +1,196 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "deploymentConfiguration": {
+      "environment": {
+        "description": "Environment for subscription parsing (Prod, Dev, Test)",
+        "value": "Prod"
+      },
+      "region": {
+        "description": "Region for subscription parsing (SwedenCentral, GermanyWestCentral, etc.)",
+        "value": "SwedenCentral"
+      },
+      "primaryLocation": {
+        "description": "Primary EU Azure region for resource deployment",
+        "value": "swedencentral"
+      },
+      "secondaryLocation": {
+        "description": "Secondary EU Azure region for multi-region deployments",
+        "value": "germanywestcentral"
+      },
+      "managementGroupId": {
+        "description": "Root management group ID for Azure Landing Zone",
+        "value": "your-management-group-id"
+      },
+      "topLevelManagementGroupPrefix": {
+        "description": "Prefix for management group hierarchy",
+        "value": "alz"
+      },
+      "topLevelManagementGroupSuffix": {
+        "description": "Optional suffix for management group hierarchy",
+        "value": ""
+      },
+      "topLevelManagementGroupDisplayName": {
+        "description": "Display name for top level management group",
+        "value": "Azure Landing Zones"
+      }
+    },
+    "authenticationConfiguration": {
+      "method": {
+        "description": "Authentication method: 'interactive', 'service-principal', 'managed-identity', 'device-code'",
+        "value": "interactive"
+      },
+      "tenantId": {
+        "description": "Azure AD Tenant ID (required for service principal authentication)",
+        "value": ""
+      },
+      "servicePrincipalId": {
+        "description": "Service Principal Application ID (required for service principal authentication)",
+        "value": ""
+      },
+      "servicePrincipalSecret": {
+        "description": "Service Principal Secret (use environment variable or Azure Key Vault reference)",
+        "value": ""
+      },
+      "subscriptionId": {
+        "description": "Default subscription ID to set after authentication",
+        "value": ""
+      }
+    },
+    "subscriptionIds": {
+      "management": {
+        "description": "Management subscription ID for Azure Landing Zone - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000001"
+      },
+      "connectivity": {
+        "description": "Connectivity subscription ID for hub networking - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000002"
+      },
+      "landingZone": {
+        "description": "Landing zone subscription ID for workload deployments - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000003"
+      },
+      "identity": {
+        "description": "Identity subscription ID for identity management - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000004"
+      },
+      "security": {
+        "description": "Security subscription ID for security services - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000005"
+      },
+      "logging": {
+        "description": "Logging subscription ID for monitoring and logging - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000006"
+      },
+      "platform": {
+        "description": "Platform subscription ID for platform services - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000007"
+      },
+      "workload1": {
+        "description": "Workload subscription ID 1 - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000008"
+      },
+      "workload2": {
+        "description": "Workload subscription ID 2 - Replace with actual subscription ID after creation",
+        "value": "00000000-0000-0000-0000-000000000009"
+      }
+    },
+    "resourceGroupNames": {
+      "logging": {
+        "description": "Resource group name for logging resources",
+        "value": "rg-alz-logging-001"
+      },
+      "connectivity": {
+        "description": "Resource group name for connectivity resources",
+        "value": "rg-alz-connectivity-001"
+      },
+      "identity": {
+        "description": "Resource group name for identity resources",
+        "value": "rg-alz-identity-001"
+      },
+      "security": {
+        "description": "Resource group name for security resources",
+        "value": "rg-alz-security-001"
+      }
+    },
+    "resourceNames": {
+      "logAnalyticsWorkspace": {
+        "description": "Log Analytics workspace name",
+        "value": "alz-log-analytics"
+      },
+      "automationAccount": {
+        "description": "Automation account name",
+        "value": "alz-automation-account"
+      },
+      "userAssignedIdentity": {
+        "description": "User assigned managed identity name",
+        "value": "alz-umi-identity"
+      },
+      "dataCollectionRules": {
+        "vmInsights": {
+          "description": "VM Insights Data Collection Rule name",
+          "value": "alz-ama-vmi-dcr"
+        },
+        "changeTracking": {
+          "description": "Change Tracking Data Collection Rule name",
+          "value": "alz-ama-ct-dcr"
+        },
+        "mdfcSql": {
+          "description": "MDFC SQL Data Collection Rule name",
+          "value": "alz-ama-mdfcsql-dcr"
+        }
+      }
+    },
+    "policyConfiguration": {
+      "customPolicyAssignment": {
+        "name": {
+          "description": "Custom policy assignment name",
+          "value": "iso27000"
+        },
+        "displayName": {
+          "description": "Custom policy assignment display name",
+          "value": "Assess ISO compliance"
+        },
+        "description": {
+          "description": "Custom policy assignment description",
+          "value": "Policy assignment to management group with Bicep"
+        },
+        "definitionId": {
+          "description": "Policy definition ID for ISO compliance",
+          "value": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2"
+        },
+        "nonComplianceMessage": {
+          "description": "Non-compliance message for policy violations",
+          "value": "Resources should be ISO compliant"
+        }
+      }
+    },
+    "containerRegistry": {
+      "sku": {
+        "description": "Azure Container Registry SKU",
+        "value": "Basic"
+      },
+      "tags": {
+        "environment": {
+          "description": "Environment tag for container registry",
+          "value": "Live"
+        }
+      }
+    },
+    "logAnalyticsConfiguration": {
+      "retentionInDays": {
+        "description": "Log Analytics workspace data retention in days",
+        "value": "90"
+      },
+      "resourceCategory": {
+        "description": "Log Analytics workspace resource category",
+        "value": "allLogs"
+      },
+      "skuName": {
+        "description": "Log Analytics workspace SKU name",
+        "value": "PerGB2018"
+      }
+    }
+  }
+} 

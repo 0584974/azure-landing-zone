@@ -1,0 +1,120 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLogAnalyticsWorkspaceName": {
+      "value": "alz-log-analytics"
+    },
+    "parLogAnalyticsWorkspaceLocation": {
+      "value": "chinaeast2"
+    },
+    "parLogAnalyticsWorkspaceSkuName": {
+      "value": "PerGB2018"
+    },
+    "parLogAnalyticsWorkspaceLogRetentionInDays": {
+      "value": 365
+    },
+    "parDataCollectionRuleVMInsightsName": {
+      "value": "alz-ama-vmi-dcr"
+    },
+    "parDataCollectionRuleChangeTrackingName": {
+      "value": "alz-ama-ct-dcr"
+    },
+    "parDataCollectionRuleMDFCSQLName": {
+      "value": "alz-ama-mdfcsql-dcr"
+    },
+    "parUserAssignedManagedIdentityName": {
+      "value": "alz-umi-identity"
+    },
+    "parUserAssignedManagedIdentityLocation": {
+      "value": "chinaeast2"
+    },
+    "parAutomationAccountEnabled": {
+      "value": false
+    },
+    "parLogAnalyticsWorkspaceLinkAutomationAccount": {
+      "value": true
+    },
+    "parAutomationAccountName": {
+      "value": "alz-automation-account"
+    },
+    "parAutomationAccountLocation": {
+      "value": "chinaeast2"
+    },
+    "parAutomationAccountUseManagedIdentity": {
+      "value": true
+    },
+    "parAutomationAccountPublicNetworkAccess": {
+      "value": true
+    },
+    "parTags": {
+      "value": {
+        "Environment": "Live"
+      }
+    },
+    "parLogAnalyticsWorkspaceTags": {
+      "value": {
+        "Environment": "Live"
+      }
+    },
+    "parAutomationAccountTags": {
+      "value": {
+        "Environment": "Live"
+      }
+    },
+    "parLogAnalyticsLinkedServiceAutomationAccountName": {
+      "value": "Automation"
+    },
+    "parTelemetryOptOut": {
+      "value": false
+    },
+    "parGlobalResourceLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parAutomationAccountLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parLogAnalyticsWorkspaceLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parDataCollectionRuleVMInsightsLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parDataCollectionRuleChangeTrackingLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parDataCollectionRuleMDFCSQLLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parSecurityInsightsOnboardingLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    },
+    "parChangeTrackingSolutionLock": {
+      "value": {
+        "kind": "None",
+        "notes": "This lock was created by the ALZ Bicep Logging Module."
+      }
+    }
+  }
+}

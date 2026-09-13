@@ -1,0 +1,116 @@
+# Azure Landing Zone Template - Git Ignore File
+
+# Internal analysis and review files
+CODE_REVIEW.md
+DEPLOYMENT_CHANGES.md
+EXECUTIVE_SUMMARY.md
+PRE_PUSH_SUMMARY.md
+GITLAB_PUSH_GUIDE.md
+
+# Temporary files created by deployment script
+*.backup
+*.tmp
+*.bak
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Sensitive configuration files (if any)
+variables.local.json
+variables.prod.json
+variables.*.json
+!variables.json
+
+# Azure CLI
+.azure/
+
+# Terraform (if used)
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Backup files
+backup/
+backups/
+*.backup
+
+# Test outputs
+test-outputs/
+*.test.json
+
+# Compiled files
+*.pyc
+__pycache__/
+*.class
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+out/
+
+# Coverage reports
+coverage/
+*.coverage
+.nyc_output/
+
+# Secrets and credentials (extra safety)
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+
+# Local deployment artifacts
+deployments/
+*.deployment.json
+
+# OS generated files
+Icon?
+.directory

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLocation": {
+      "value": "{{deploymentConfiguration.primaryLocation.value}}"
+    },
+    "parAcrSku": {
+      "value": "{{containerRegistry.sku.value}}"
+    },
+    "parTags": {
+      "value": {
+        "Environment": "{{containerRegistry.tags.environment.value}}"
+      }
+    }
+  }
+}
