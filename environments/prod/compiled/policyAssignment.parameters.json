@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyAssignmentName": {
+      "value": "iso27000"
+    },
+    "policyDefinitionID": {
+      "value": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2"
+    },
+    "policyDisplayName": {
+      "value": "Assess ISO compliance"
+    },
+    "policyDescription": {
+      "value": "Policy assignment to management group with Bicep"
+    },
+    "nonComplianceMessage": {
+      "value": "Resources should be ISO compliant"
+    },
+    "parLocation": {
+      "value": "swedencentral"
+    }
+  }
+}

@@ -1,12 +1,32 @@
-# Deployment Flow
+# Deployment flow
 
-## Merge request flow
-1. Developer updates Bicep, docs, or environment files.
-2. GitLab runs `validate` automatically.
-3. Reviewers approve the change.
-4. A manual `what-if` job can be run from the default branch.
+Sprint 2 introduces a compiled environment model and separates deployment into three management-group stages:
 
-## Future iterations
-- Add deploy stages
-- Add post-deploy verification
-- Add rollback and drift detection
+1. **Platform** – subscription placement into the ALZ hierarchy.
+2. **Governance** – baseline policy assignment(s).
+3. **Observability** – management-group diagnostic settings.
+
+## Local flow
+
+```bash
+bash scripts/validate.sh prod
+bash scripts/whatif.sh prod platform
+bash scripts/whatif.sh prod governance
+bash scripts/whatif.sh prod observability
+bash scripts/deploy-platform.sh prod
+bash scripts/deploy-governance.sh prod
+bash scripts/deploy-observability.sh prod
+bash scripts/verify.sh prod
+```
+
+## Compiled artifacts
+
+`bash scripts/compile-env.sh <env>` generates environment-specific deployment files under `environments/<env>/compiled/`:
+
+- `variables.generated.json`
+- `subPlacementAll.parameters.json`
+- `policyAssignment.parameters.json`
+- `mgDiagSettingsAll.parameters.json`
+- `context.json`
+
+These files bridge the environment model to the existing Bicep modules without forcing an all-at-once refactor of every module input.

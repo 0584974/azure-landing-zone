@@ -1,0 +1,20 @@
+{
+  "initiatives": [
+    {
+      "name": "allowed-locations-eu",
+      "purpose": "Restrict deployments to approved EU regions."
+    },
+    {
+      "name": "required-tags-platform",
+      "purpose": "Require owner, costCenter, dataClassification, environment."
+    },
+    {
+      "name": "diagnostics-to-log-analytics",
+      "purpose": "Ensure key platform resources emit diagnostics to central workspace."
+    },
+    {
+      "name": "deny-public-ip-on-workloads",
+      "purpose": "Reduce public exposure outside approved connectivity patterns."
+    }
+  ]
+}

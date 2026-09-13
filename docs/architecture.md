@@ -1,14 +1,24 @@
 # Architecture
 
-This document describes the target enterprise Azure Landing Zone architecture for this repository.
+This repository implements an Azure Landing Zone baseline aligned to management groups, subscription placement, centralized policy, and centralized observability.
 
-## Scope
-- Management group hierarchy
-- Platform subscriptions
-- Connectivity and observability baseline
-- Policy-driven governance
+## Sprint 2 design additions
 
-## Out of scope for Sprint 1
-- Full platform deployment redesign
-- Rollback automation
-- Comprehensive policy initiative catalog
+- environment compilation layer (`scripts/compile-env.sh`)
+- stage-based deployment scripts
+- parameterized governance module for management-group policy assignment
+- compiled compatibility output for the legacy `variables.json` model
+
+## Current scope
+
+- ALZ management-group hierarchy support
+- management-group subscription placement
+- management-group diagnostic settings
+- baseline governance policy assignment
+
+## Deferred to later sprints
+
+- full connectivity deployment pipeline
+- end-to-end platform bootstrap
+- richer policy initiatives and exemptions workflow
+- integration tests against Azure test tenants

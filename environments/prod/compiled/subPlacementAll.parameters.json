@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parTopLevelManagementGroupPrefix": {
+      "value": "alz"
+    },
+    "parTopLevelManagementGroupSuffix": {
+      "value": ""
+    },
+    "parPlatformManagementMgSubs": {
+      "value": [
+        "00000000-0000-0000-0000-000000000001"
+      ]
+    },
+    "parPlatformConnectivityMgSubs": {
+      "value": [
+        "00000000-0000-0000-0000-000000000002"
+      ]
+    },
+    "parPlatformIdentityMgSubs": {
+      "value": [
+        "00000000-0000-0000-0000-000000000004"
+      ]
+    },
+    "parPlatformMgSubs": {
+      "value": [
+        "00000000-0000-0000-0000-000000000007"
+      ]
+    },
+    "parLandingZonesCorpMgSubs": {
+      "value": [
+        "00000000-0000-0000-0000-000000000003",
+        "00000000-0000-0000-0000-000000000008",
+        "00000000-0000-0000-0000-000000000009"
+      ]
+    },
+    "parTelemetryOptOut": {
+      "value": false
+    }
+  }
+}
