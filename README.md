@@ -43,3 +43,7 @@ GitLab CI now separates:
 - what-if review,
 - manual deployment by component,
 - post-deployment verification.
+
+## Integrity and provenance
+
+See [Source integrity and provenance](docs/source-integrity.md) for the current commit and tree anchors, reproducible verification commands, historical import context, and safe-use boundaries.
