@@ -11,33 +11,59 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone upstream ALZ-Bicep v0.22.5
-        run: git clone --depth 1 --branch v0.22.5 https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
-      - name: Print canonical directory hashes
+      - name: Compare candidate ALZ-Bicep releases
         shell: bash
         run: |
-          python3 - <<'PY'
+          cat > /tmp/compare.py <<'PY'
           from pathlib import Path
-          import hashlib
-          root = Path('/tmp/alz-upstream/infra-as-code/bicep')
+          import hashlib, sys
+
+          expected = {
+            'CRML/containerRegistry':'52e4c5ed5d1e4bbcb70b3d2356d985d84ff08c47386b951b5a3fcaf406123bff',
+            'CRML/customerUsageAttribution':'c2495a6b8cdadb6e1b4bae0061b0e6cf038adced5e888a416999d440916afb36',
+            'CRML/subscriptionAlias':'6849d2119891b04da9e44d5a97e8478a0ecb96005abc573036ea9f0e73b7cc25',
+            'modules/customRoleDefinitions':'b5248e1a9c4cad62d56d83eacf19d5af77bf75b655379a316b95d0aee58a4b18',
+            'modules/hubNetworking':'e0a4e475c04676700001dc15706d66dd7293935648de49b004812fd572b357e1',
+            'modules/logging':'ed2bb75f3ce10cee6151ece1f5979f31b7d3b863f3563fb372cda9e47aeb4399',
+            'modules/managementGroups':'0505a8a73083f52a24ebb4c0384c92366c45737b98e02c675f992be45634b163',
+            'modules/mgDiagSettings':'516d5c094d7dc02347703cd9d89f1978751bf06bfbe0dc26ac16711b07202194',
+            'modules/policy':'d2655e0fd92d75f8fa9ea8a3b9514039e1d400c5c857645be991ba8b89b2af31',
+            'modules/privateDnsZoneLinks':'2e5af1c756df2578a41b5154a74a15905e4eac62d7fa6dac3e9ec4a505344bdb',
+            'modules/privateDnsZones':'82a0c52abb522a81975ba673882109897267c4f5abe3d643cc231bcd45fa62e7',
+            'modules/publicIp':'dadbba66ef02125f3803841db21545ff2172a44ee1495e871ec299ec66cfd152',
+            'modules/resourceGroup':'ebaa4323def3c7a7ce72cd3e81cded3a0d3a0357b5052464c40557fce9e56683',
+            'modules/roleAssignments':'279b06cb36d466a02ddcaaf778ea6e31aafc67febc162f2eebbd084d68e03d97',
+            'modules/spokeNetworking':'31af29863c1d0c2a94cb242fb9b50ed89d2ed869b8f1865eaacde2324d30327d',
+            'modules/subscriptionPlacement':'33efc05f4ec0c2c0ae98e6b093d205f587ae081433e2a620ba805a842373beb0',
+            'modules/vnetPeering':'71be099fc8d8d5ae3c5d2cbd82187958301de92e359c0d946482afc913fae3b4',
+            'modules/vnetPeeringVwan':'1c4c0cab1c8c293ffb46ab6cb74f701ab88b4eb76ac5b32f25dcaa2cfc0b519e',
+            'modules/vwanConnectivity':'13704a06ea4c0aafbf9ee27dc299baa6780879914f665cb97192412fd1b704fc',
+            'orchestration/hubPeeredSpoke':'2ba0fe721c5614d7890551ec79a360357adbcc3d931e958b29a337c6ea23c438',
+            'orchestration/mgDiagSettingsAll':'82276583e4f61814ab43fb4be4f0c18e0ceb72a3fa34a56b91979f1f96017c63',
+            'orchestration/subPlacementAll':'f55c29ce8ac1a24ba97204430b6d466de4a048bb58eb2725c88464431ee92795',
+          }
+          root=Path(sys.argv[1])/'infra-as-code/bicep'
           def digest(path):
-              files = sorted(p for p in path.rglob('*') if p.is_file())
-              h = hashlib.sha256()
-              total = 0
+              files=sorted(p for p in path.rglob('*') if p.is_file())
+              h=hashlib.sha256()
               for p in files:
-                  rel = p.relative_to(path).as_posix().encode()
-                  data = p.read_bytes()
+                  rel=p.relative_to(path).as_posix().encode(); data=p.read_bytes()
                   h.update(rel); h.update(b'\0'); h.update(data); h.update(b'\0')
-                  total += len(data)
-              return len(files), total, h.hexdigest()
-          print('OVERALL', *digest(root), sep='\t')
-          for top in ['CRML','modules','orchestration']:
-              p = root/top
-              print(top, *digest(p), sep='\t')
-              for d in sorted(x for x in p.iterdir() if x.is_dir()):
-                  print(f'{top}/{d.name}', *digest(d), sep='\t')
-          for p in sorted(x for x in root.iterdir() if x.is_file()):
-              data=p.read_bytes()
-              blob=hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()
-              print(f'FILE/{p.name}', len(data), blob, sep='\t')
+              return len(files), h.hexdigest()
+          matches=[]; misses=[]
+          for rel, want in expected.items():
+              p=root/rel
+              if not p.exists(): misses.append((rel,'MISSING')); continue
+              n,got=digest(p)
+              (matches if got==want else misses).append(rel if got==want else (rel,got,n))
+          print(f'MATCHES {len(matches)}/{len(expected)}')
+          print('MATCH ' + ' '.join(matches))
+          for x in misses: print('MISS', *x)
           PY
+
+          for tag in v0.21.0 v0.22.0 v0.22.1 v0.22.2 v0.22.3 v0.22.4 v0.22.5; do
+            echo "===== $tag ====="
+            rm -rf /tmp/alz-upstream
+            git clone -q --depth 1 --branch "$tag" https://github.com/Azure/ALZ-Bicep.git /tmp/alz-upstream
+            python3 /tmp/compare.py /tmp/alz-upstream
+          done
